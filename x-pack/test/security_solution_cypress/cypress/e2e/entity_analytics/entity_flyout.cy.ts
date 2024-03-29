@@ -50,7 +50,7 @@ const SIEM_KIBANA_HOST_NAME = 'Host-fwarau82er';
 describe(
   'Entity Flyout',
   {
-    tags: ['@ess', '@serverless'],
+    tags: ['@ess', '@serverless', '@RunOnlyMe'],
     env: {
       ftrConfig: {
         kbnServerArgs: [
@@ -132,7 +132,7 @@ describe(
       });
 
       // https://github.com/elastic/kibana/issues/179248
-      describe('Managed data section', { tags: ['@brokenInServerlessQA'] }, () => {
+      describe('Managed data section', { tags: ['@RunOnlyMe'] }, () => {
         beforeEach(() => {
           mockFleetInstalledIntegrations([
             {

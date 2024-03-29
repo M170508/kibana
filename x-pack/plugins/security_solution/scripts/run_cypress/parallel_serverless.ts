@@ -113,7 +113,7 @@ async function createSecurityProject(
     process.env.KIBANA_MKI_USE_LATEST_COMMIT &&
     process.env.KIBANA_MKI_USE_LATEST_COMMIT === '1'
   ) {
-    const kibanaOverrideImage = `${process.env.BUILDKITE_COMMIT?.substring(0, 12)}`;
+    const kibanaOverrideImage = `experiment`;
     log.info(
       `Overriding Kibana image in the MKI with docker.elastic.co/kibana-ci/kibana-serverless:sec-sol-qg-${kibanaOverrideImage}`
     );
@@ -556,10 +556,10 @@ ${JSON.stringify(cypressConfigFile, null, 2)}
               return process.exit(1);
             }
 
-            context.addCleanupTask(() => {
-              const command = `curl -X DELETE ${BASE_ENV_URL}/api/v1/serverless/projects/security/${project.id} -H "Authorization: ApiKey ${API_KEY}"`;
-              exec(command);
-            });
+            // context.addCleanupTask(() => {
+              // const command = `curl -X DELETE ${BASE_ENV_URL}/api/v1/serverless/projects/security/${project.id} -H "Authorization: ApiKey ${API_KEY}"`;
+              // exec(command);
+            // });
 
             // Reset credentials for elastic user
             const credentials = await resetCredentials(project.id, id, API_KEY);
@@ -646,8 +646,8 @@ ${JSON.stringify(cypressConfigFile, null, 2)}
                   },
                 });
                 // Delete serverless project
-                log.info(`${id} : Deleting project ${PROJECT_NAME}...`);
-                await deleteSecurityProject(project.id, PROJECT_NAME, API_KEY);
+                // log.info(`${id} : Deleting project ${PROJECT_NAME}...`);
+                // await deleteSecurityProject(project.id, PROJECT_NAME, API_KEY);
               } catch (error) {
                 result = error;
               }
