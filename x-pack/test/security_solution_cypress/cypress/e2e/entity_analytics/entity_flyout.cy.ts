@@ -82,7 +82,7 @@ describe(
     });
 
     describe('User details', () => {
-      it('should display entity flyout and open risk input panel', () => {
+      it('should display entity flyout and open risk input panel',{ tags: ['@SkipRunOnlyMe'] }, () => {
         expandFirstAlertUserFlyout();
 
         cy.log('header section');
@@ -94,13 +94,13 @@ describe(
       });
 
       describe('Asset criticality', () => {
-        it('should show asset criticality in the risk input panel', () => {
+        it('should show asset criticality in the risk input panel',{ tags: ['@SkipRunOnlyMe'] }, () => {
           expandFirstAlertUserFlyout();
           expandRiskInputsFlyoutPanel();
           cy.get(ASSET_CRITICALITY_BADGE).should('contain.text', 'Extreme Impact');
         });
 
-        it('should display asset criticality accordion', () => {
+        it('should display asset criticality accordion', { tags: ['@SkipRunOnlyMe'] },() => {
           cy.log('asset criticality');
           expandFirstAlertUserFlyout();
           cy.get(ENTITY_DETAILS_FLYOUT_ASSET_CRITICALITY_SELECTOR).should(
@@ -111,7 +111,7 @@ describe(
           cy.get(ENTITY_DETAILS_FLYOUT_ASSET_CRITICALITY_BUTTON).should('have.text', 'Assign');
         });
 
-        it('should display asset criticality modal', () => {
+        it('should display asset criticality modal', { tags: ['@SkipRunOnlyMe'] },() => {
           cy.log('asset criticality modal');
           expandFirstAlertUserFlyout();
           toggleAssetCriticalityModal();
@@ -121,7 +121,7 @@ describe(
           );
         });
 
-        it('should update asset criticality state', () => {
+        it('should update asset criticality state',{ tags: ['@SkipRunOnlyMe'] }, () => {
           cy.log('asset criticality update');
           expandFirstAlertUserFlyout();
           selectAssetCriticalityLevel('High Impact');
@@ -164,7 +164,7 @@ describe(
       });
     });
 
-    describe('Host details', () => {
+    describe('Host details', { tags: ['@SkipRunOnlyMe'] },() => {
       it('should display entity flyout and open risk input panel', () => {
         expandFirstAlertHostFlyout();
 

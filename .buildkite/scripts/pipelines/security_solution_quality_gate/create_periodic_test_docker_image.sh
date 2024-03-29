@@ -29,7 +29,7 @@ fi
 
 docker pull $KIBANA_BASE_IMAGE:latest
 echo "Building the image"
-docker build -f .buildkite/scripts/pipelines/security_solution_quality_gate/Dockerfile . -t $KIBANA_IMAGE
+docker build -f .buildkite/scripts/pipelines/security_solution_quality_gate/Dockerfile . -t docker.elastic.co/kibana-ci/kibana-ubi-fips:sec-sol-qg-experiment
 echo "Image built"
 # echo "--- Build images"
 # node scripts/build \
@@ -45,34 +45,33 @@ echo "Image built"
 #   --skip-docker-contexts \
 #   --skip-cdn-assets
 
-# echo "--- Tag images"
-# docker rmi "$KIBANA_IMAGE"
-# docker load < "target/kibana-serverless-$BASE_VERSION-docker-image.tar.gz"
-# docker tag "$KIBANA_IMAGE" "$KIBANA_IMAGE-amd64"
+echo "--- Tag images"
+docker rmi "$KIBANA_IMAGE"
+docker load < "target/kibana-serverless-$BASE_VERSION-docker-image.tar.gz"
+docker tag "$KIBANA_IMAGE" "$KIBANA_IMAGE-amd64"
 
-# docker rmi "$KIBANA_IMAGE"
-# docker load < "target/kibana-serverless-$BASE_VERSION-docker-image-aarch64.tar.gz"
-# docker tag "$KIBANA_IMAGE" "$KIBANA_IMAGE-arm64"
-echo "Pushing the image"
-# echo "--- Push images"
-docker image push "$KIBANA_IMAGE"
-echo "Image pushed"
-# docker image push "$KIBANA_IMAGE-amd64"
+docker rmi "$KIBANA_IMAGE"
+docker load < "target/kibana-serverless-$BASE_VERSION-docker-image-aarch64.tar.gz"
+docker tag "$KIBANA_IMAGE" "$KIBANA_IMAGE-arm64"
 
-# echo "--- Create and push manifests"
-# docker manifest create \
-  # "$KIBANA_IMAGE" \
-  # --amend "$KIBANA_IMAGE-arm64" \
-  # --amend "$KIBANA_IMAGE-amd64"
-# docker manifest push "$KIBANA_IMAGE"
+echo "--- Push images"
+docker image push "$KIBANA_IMAGE-arm64"
+docker image push "$KIBANA_IMAGE-amd64"
 
-# if [[ "$BUILDKITE_BRANCH" == "$KIBANA_BASE_BRANCH" ]] && [[ "${BUILDKITE_PULL_REQUEST:-false}" == "false" ]]; then
-  # docker manifest create \
-    # "$KIBANA_BASE_IMAGE:latest" \
-    # --amend "$KIBANA_IMAGE-arm64" \
-    # --amend "$KIBANA_IMAGE-amd64"
-  # docker manifest push "$KIBANA_BASE_IMAGE:latest"
-# fi
+echo "--- Create and push manifests"
+docker manifest create \
+  "$KIBANA_IMAGE" \
+  --amend "$KIBANA_IMAGE-arm64" \
+  --amend "$KIBANA_IMAGE-amd64"
+docker manifest push "$KIBANA_IMAGE"
+
+if [[ "$BUILDKITE_BRANCH" == "$KIBANA_BASE_BRANCH" ]] && [[ "${BUILDKITE_PULL_REQUEST:-false}" == "false" ]]; then
+  docker manifest create \
+    "$KIBANA_BASE_IMAGE:latest" \
+    --amend "$KIBANA_IMAGE-arm64" \
+    --amend "$KIBANA_IMAGE-amd64"
+  docker manifest push "$KIBANA_BASE_IMAGE:latest"
+fi
 
 docker logout docker.elastic.co
 

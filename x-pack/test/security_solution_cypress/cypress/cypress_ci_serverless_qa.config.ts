@@ -19,7 +19,7 @@ export default defineCypressConfig({
   env: {
     grepFilterSpecs: true,
     grepOmitFiltered: true,
-    grepTags: '@RunOnlyMe',
+    grepTags: '@RunOnlyMe --@SkipRunOnlyMe',
   },
   execTimeout: 300000,
   pageLoadTimeout: 300000,
